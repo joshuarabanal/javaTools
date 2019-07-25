@@ -155,6 +155,11 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
         public String toString() {
         	return getName()+":"+getValue();
         }
+		public void setValue(String text) {
+			// TODO Auto-generated method stub
+			this.valueString = text;
+			this.value = -1;
+		}
     }
 
 
