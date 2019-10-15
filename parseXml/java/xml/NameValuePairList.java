@@ -36,7 +36,7 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
         return null;
     }
     public void add(int name, String value){
-        this.add(new NameValuePair(name,value));
+        this.add(new NameValuePair(name,value, values));
     }
     public void add(xml.unoptimized.NameValuePair nvp){
         add(new NameValuePair(nvp.getName(), nvp.getValue()));
@@ -57,7 +57,8 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
                 add(
                         new NameValuePair(
                                 nameIndex,
-                                new String(buffer, valueStart,valueLength)
+                                new String(buffer, valueStart,valueLength),
+                                values
                         )
                 );
             }
@@ -65,14 +66,15 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
                 add(
                         new NameValuePair(
                             new String(buffer, nameStart,nameLength),
-                            valueIndex
+                            valueIndex,
+                            values
                         )
                 );
             }
         }
         else{
             add(
-                    new NameValuePair(nameIndex, valueIndex)
+                    new NameValuePair(nameIndex, valueIndex, values)
             );
         }
 
@@ -102,22 +104,26 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
     	}
     	return retu +"}";
     }
-    public class NameValuePair implements xml.unoptimized.NameValuePair {
+    public static class NameValuePair implements xml.unoptimized.NameValuePair {
         int name = -1,value = -1;
         String nameString, valueString;
-        NameValuePair(int name, int value){
+        String[] values;
+        NameValuePair(int name, int value, String[] values){
             this.name = name;
             this.value = value;
+            this.values = values;
         }
-        NameValuePair( String name, int value){
+        NameValuePair( String name, int value, String[] values){
             this.nameString = name;
             this.value = value;
+            this.values = values;
         }
-        NameValuePair( int name, String value){
+        NameValuePair( int name, String value, String[] values){
             this.name = name;
             this.valueString = value;
+            this.values = values;
         }
-        NameValuePair(String name, String value){
+        public NameValuePair(String name, String value){
             this.nameString = name;
             this.valueString = value;
         }
@@ -134,9 +140,10 @@ public class NameValuePairList  extends ArrayList<NameValuePairList.NameValuePai
             if(valueString != null){
                 return valueString;
             }
-            else{
+            else if(values!= null){
                 return new String(values[value]);
             }
+            return null;
         }
         public int getNameIndex(){
             if(name == -1){
